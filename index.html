@@ -12,6 +12,17 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
   </head>
   <body>
     <section>
@@ -102,7 +113,7 @@
 
     <!-- our impact section -->
 
-    <section class="bg-[#CFF0DC] py-3">
+    <section class="bg-[#CFF0DC] py-5 pb-15">
       <h1 class="py-10 text-black font-bold text-xl text-center">Our Impct</h1>
       <div class="flex items-center justify-between px-10 py-5">
         <div
@@ -125,6 +136,43 @@
         </div>
       </div>
     </section>
+
+    <!-- plant a Tree Today -->
+    <section
+      class="bg-[#166534] text-white py-20 flex flex-col justify-center items-center"
+    >
+      <div class="mb-6 text-center">
+        <h2 class="text-3xl font-bold">Plant a Tree Today</h2>
+      </div>
+      <div
+        class="flex flex-col max-w-lg w-full bg-[#15803D] p-6 space-y-3 rounded-xl"
+      >
+        <input
+          placeholder="Your Name"
+          type="text"
+          class="p-2 rounded-md bg-white text-black focus:outline-none"
+        />
+        <input
+          placeholder="Your Email Address"
+          type="email"
+          class="p-2 rounded-md text-black bg-white focus:outline-none"
+        />
+        <select class="p-2 rounded-md text-black bg-white focus:outline-none">
+          <option value="">Number of Trees</option>
+          <option value="">5 Tree</option>
+          <option value="">20 Trees</option>
+          <option value="">50 Trees</option>
+        </select>
+        <a
+          class="btn bg-yellow-300 text-green-700 rounded-3xl border-none shadow-none"
+          >Donate Now</a
+        >
+      </div>
+    </section>
+    <!-- footer  -->
+    <footer class="bg-[#14532d] text-center p-2 text-white font-normal">
+      <h4>© 2025 Green Earth. All Rights Reserved.</h4>
+    </footer>
   </body>
 
   <script src="script.js"></script>
