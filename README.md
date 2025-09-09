@@ -6,8 +6,7 @@ Ans:var, let, and const are all used to declare variables in JavaScript, but the
 
 .let is the new and better way for variables that can change. It's block-scoped, meaning it's only available inside the specific block of code (like a for loop or if statement) where it's declared. You can reassign a let variable, but you can't redeclare it in the same scope.
 
-.const is for variables that should never change. Like let, it is block-scoped. Once you assign a value to a const variable, you can't reassign it to something else. This makes your code safer and easier to understand.
----
+. const is for variables that should never change. Like let, it is block-scoped. Once you assign a value to a const variable, you can't reassign it to something else. This makes your code safer and easier to understand.
 
 2. What is the difference between map(), forEach(), and filter()?
 
