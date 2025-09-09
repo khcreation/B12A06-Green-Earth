@@ -5,6 +5,7 @@ const allTreeButton = document.getElementById("allTree");
 const cartItemsContainer = document.getElementById("cartItems");
 const cartTotalPriceElement = document.getElementById("cartTotalPrice");
 const loadingSpinner = document.getElementById("loadingSpinner");
+const myModal = document.getElementById("myModal");
 
 // Initialize an empty array to store cart items
 let cart = [];
@@ -52,6 +53,53 @@ const loadPlantsByCategory = (categoryId) => {
       hideSpinner();
     })
     .catch(() => hideSpinner());
+};
+
+const loadPlantDetails = (plantId) => {
+  showSpinner();
+  fetch(`https://openapi.programming-hero.com/api/plant/${plantId}`)
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.plant) {
+        showPlantDetails(data.plant);
+      }
+      hideSpinner();
+    })
+    .catch(() => hideSpinner());
+};
+
+const loadModal = (id) => {
+  myModal.innerHTML = "";
+  fetch(`https://openapi.programming-hero.com/api/plant/${id}`)
+    .then((res) => res.json())
+    .then((data) => {
+      showModalData(data.plants);
+    });
+};
+
+// Show Modal in UI
+
+const showModalData = (plant) => {
+  const modalDiv = document.createElement("div");
+  modalDiv.innerHTML = `<div class="space-y-2">
+        <h2 class="font-bold text-2xl modal-title">${plant.name}</h2>
+        <img class="object-cover rounded-xl w-full max-h-50 modal-image" src="${plant.image}" alt="">
+        <h3>
+            <span class="font-bold">Category: </span> 
+            <span class="text-gray-600 modal-category">${plant.category}</span>
+        </h3>
+        <h3>
+            <span class="font-bold">Price: </span> <span class="text-gray-600">৳</span>
+            <span
+                class="text-gray-600 modal-price">${plant.price}</span>
+        </h3>
+        <h3 class="text-justify">
+            <span class="font-bold">Description: </span> 
+            <span class="text-gray-600 modal-description text-justify">${plant.description}</span>
+        </h3>
+    </div>`;
+  myModal.appendChild(modalDiv);
+  document.getElementById("plantModal").showModal();
 };
 
 // --- Functions to handle UI updates and user interaction ---
@@ -114,18 +162,19 @@ const showCards = (plants) => {
       "justify-between",
       "transition-transform",
       "hover:scale-[1.01]",
-      "duration-300"
+      "duration-300",
+      "card"
     );
     cardDiv.innerHTML = `
-            <div class="">
+            <div>
                 <img class="max-h-35 w-full object-cover rounded-md" src="${
                   plant.image
                 }" alt="">
             </div>
             <div>
-                <h2 class="font-bold my-1 cursor-pointer text-lg" onclick="showPlantDetails('${
+                <h2 class="font-bold my-1 cursor-pointer text-lg" data-plant-id="${
                   plant.id
-                }')">${plant.name}</h2>
+                }" onclick="loadModal(${plant.id})">${plant.name}</h2>
                 <p class="text-xs opacity-80">${plant.description.slice(
                   0,
                   100
@@ -137,25 +186,23 @@ const showCards = (plants) => {
                 }</h4>
                 <p class="font-bold text-sm"><span>${plant.price}</span> ৳</p>
             </div>
-            <div class="flex justify-center bg-[#15803d] w-full rounded-xl hover:bg-[#01f557] transition-colors cursor-pointer">
-                <button class=" add-to-cart-btn text-white p-1 w-full" data-plant-id="${
+            <div class="flex justify-center bg-[#15803d] w-full rounded-xl hover:bg-[#0feb5c] transition-colors cursor-pointer">
+                <button class="add-to-cart-btn text-white p-1 w-full" data-plant-id="${
                   plant.id
                 }" data-plant-name="${plant.name}" data-plant-price="${
       plant.price
-    }" data-plant-image="${
-      plant.image
-    } hover:cursor-pointer " >Add to Cart</button>
+    }" data-plant-image="${plant.image}">Add to Cart</button>
             </div>`;
     cardContainer.appendChild(cardDiv);
   });
-  // Attach event listeners to the newly created buttons
+
   attachAddToCartListeners();
+  attachPlantDetailsListeners();
 };
 
 const attachAddToCartListeners = () => {
   document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
     button.addEventListener("click", (e) => {
-      // Get the parent div, which holds the background color and rounded corners
       const parentDiv = e.target.parentElement;
 
       const plantId = e.target.dataset.plantId;
@@ -163,24 +210,46 @@ const attachAddToCartListeners = () => {
       const plantPrice = parseFloat(e.target.dataset.plantPrice);
       const plantImage = e.target.dataset.plantImage;
 
-      // Call the function to handle adding the item to the cart
       addToCart(plantId, plantName, plantPrice, plantImage);
-      // Show a success message
+
+      parentDiv.classList.remove("bg-[#15803d]");
+      parentDiv.classList.add("bg-[#FACC15]");
+
+      setTimeout(() => {
+        parentDiv.classList.remove("bg-[#FACC15]");
+        parentDiv.classList.add("bg-[#15803d]");
+      }, 300);
+
       alert(`${plantName} is added to cart successfully!`);
     });
   });
 };
 
-// --- Cart Management Functions ---
-const addToCart = (plantId, plantName, plantPrice, plantImage) => {
-  // Find if the item already exists in the cart
-  const existingItem = cart.find((item) => item.id === plantId);
+const attachPlantDetailsListeners = () => {
+  document.querySelectorAll(".card h2").forEach((titleElement) => {
+    titleElement.addEventListener("click", () => {
+      const plantId = titleElement.dataset.plantId;
+      loadPlantDetails(plantId);
+    });
+  });
+};
 
+const showPlantDetails = (plant) => {
+  modalTitle.textContent = plant.name;
+  modalImage.src = plant.image;
+  modalImage.alt = plant.name;
+  modalCategory.textContent = plant.category;
+  modalPrice.textContent = plant.price;
+  modalDescription.textContent = plant.description;
+
+  plantModal.showModal();
+};
+
+const addToCart = (plantId, plantName, plantPrice, plantImage) => {
+  const existingItem = cart.find((item) => item.id === plantId);
   if (existingItem) {
-    // If it exists, increase the quantity
     existingItem.quantity += 1;
   } else {
-    // If it doesn't exist, add a new item to the cart
     cart.push({
       id: plantId,
       name: plantName,
@@ -189,16 +258,12 @@ const addToCart = (plantId, plantName, plantPrice, plantImage) => {
       quantity: 1,
     });
   }
-  // Update the UI after a change in the cart
   updateCartUI();
 };
 
 const updateCartUI = () => {
-  // Clear the existing cart items in the UI
   cartItemsContainer.innerHTML = "";
   let totalPrice = 0;
-
-  // Loop through the cart array and create HTML for each item
   cart.forEach((item) => {
     totalPrice += item.price * item.quantity;
     const cartItemDiv = document.createElement("div");
@@ -234,10 +299,7 @@ const updateCartUI = () => {
     cartItemsContainer.appendChild(cartItemDiv);
   });
 
-  // Update the total price displayed in the UI
   cartTotalPriceElement.textContent = totalPrice.toFixed(2);
-
-  // Attach event listeners for the remove buttons
   attachRemoveButtonListeners();
 };
 
@@ -254,14 +316,11 @@ const removeFromCart = (plantId) => {
   const itemIndex = cart.findIndex((item) => item.id === plantId);
   if (itemIndex > -1) {
     if (cart[itemIndex].quantity > 1) {
-      // Decrease quantity if it's more than 1
       cart[itemIndex].quantity -= 1;
     } else {
-      // Remove the item from the array if quantity is 1
       cart.splice(itemIndex, 1);
     }
   }
-  // Update the UI
   updateCartUI();
 };
 

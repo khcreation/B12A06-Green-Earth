@@ -216,16 +216,29 @@
       </div>
     </main>
 
+    <!--plant details modal -->
+    <dialog id="plantModal" class="modal">
+      <div class="modal-box">
+        <div id="myModal"></div>
+        <div class="modal-action">
+          <form method="dialog">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn">Close</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
     <!-- About section -->
-    <section class="bg-[#f0fdf4]">
-      <h1 class="text-center font-bold text-xl pt-3">About the Campaign</h1>
+    <section class="bg-[#f0fdf4] mx-auto">
+      <h1 class="text-center font-bold text-2xl pt-10">About the Campaign</h1>
       <div
         class="flex flex-col md:flex-row items-center justify-center py-10 gap-6 m-2"
       >
         <div class="flex justify-center">
           <img
             src="assets/about.png"
-            class="w-60 h-60 md:w-[20rem] md:h-[20rem]"
+            class="max-w-75 max-h-80 md:w-[25rem] md:h-[25rem]"
             alt=""
           />
         </div>
@@ -298,7 +311,9 @@
           type="email"
           class="p-2 rounded-md text-black bg-white focus:outline-none"
         />
-        <select class="p-2 rounded-md text-black bg-white focus:outline-none">
+        <select
+          class="p-2 rounded-md text-black bg-white focus:outline-none w-full"
+        >
           <option value="">Number of Trees</option>
           <option value="">5 Tree</option>
           <option value="">20 Trees</option>
